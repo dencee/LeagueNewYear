@@ -1,27 +1,29 @@
+"""
+Draw a fireworks display!
+"""
 
 def setup():
     global bg, firework, fireworks_display, countdown
     
     # 1. Use the size(width, height) function to set the size of your program
-    # to at least 1200, 800
-
+    # to at least 1200 width, 800 height
+    
     # 2. Use the loadImage() function to initialize the 'bg' variable
     # bg = loadImage('sanDiego.jpg')
     # bg = loadImage('futureCity.jpg')
-    # bg = loadImage('space.jpg')
-    
+
     # 3. Use the bg variable's resize(width, height) to set the background image
     # to the size of your program
     
     # 4. Initialize the 'firework' variable to a Firework(x, y)
     # You can choose the values for x and y
-    
+
 
 def draw():
     global firework
     
     # 5. Call the image(bg, 0, 0) function to display your background  
-    
+
     # 6. Call tint(255, 50)
     
     # 7. Call the firework variable's draw() method 
@@ -32,12 +34,24 @@ def draw():
 
         # 9. Set the 'firework' variable to a new Firework at mouseX and mouseY
         
-        
         # EXTRA
         # Can you figure out how to:
         # * Make the fireworks sparkle?
         # * Make a multi-colored firework?
         # * Set the size of your firework?
+        # * Play a sound when the firework explodes?
+
+        #set_sound("arcade_explode2.mp3")
+        # other sounds to choose from:
+        #   arcade_explode1.mp3, arcade_explode2.mp3, arcade_explode3.mp3 
+        #   arcade_bomb1.mp3, arcade_bomb2.mp3, arcade_bomb3.mp3
+        #   airHorn1.mp3, airHorn2.mp3
+
+
+
+
+
+
 
 
 
@@ -63,12 +77,12 @@ def draw():
   #    for k in range(30):
   #        colors = ['#FF0000', '#FFFFFF', '#0000FF']
   #        new_firework = Firework(random(width), random(height), colors[i % len(colors)])
-  #        fireworks_display.add_firework(new_firework, (100*k) + 10000);
+  #        fireworks_display.add_firework(new_firework, (100*k) + 10000)
   #
   # 2. Create a Countdown object in the setup() method with a starting value of 10.
   # This will create a timer that counts down from 10 to 0.
   #
-  # 3. Call the fireworksDisplay's launch() method and the Countdown object's draw() method.
+  # 3. Call the fireworks_display's launch() method and the Countdown object's draw() method.
   # How do the fireworks look? See if you can modify some of the code to make your
   # own unique New Year's fireworks celebration!
 
@@ -84,15 +98,25 @@ class Firework:
     def __init__(self, x=None, y=None, firework_colors=None, sound=None):
         self.x = x
         self.y = y
-        self.firework_colors = firework_colors
+        self.firework_colors = color(255) if firework_colors is None else firework_colors
         self.sound = sound
         self.sound_playing = False
         self.particles = list()
         self.particles_per_firework = 75
         
+        # Default white firework
         for _ in range( self.particles_per_firework ):
-            particle = Particle(self.x, self.y, self.firework_colors)
+            particle_color = self.firework_colors
+            
+            if isinstance(self.firework_colors, list):
+                particle_color = self.firework_colors[int(random(len(self.firework_colors)))]
+            
+            particle = Particle(self.x, self.y, particle_color)
             self.particles.append(particle)
+
+    def set_color(self, fw_color=None):        
+        for particle in self.particles:
+            particle.particle_color = fw_color
 
     def set_multi_colored_firework(self):
         for p in self.particles:
@@ -105,6 +129,9 @@ class Firework:
     def set_sparkle(self, setting):
         for p in self.particles:
             p.is_sparkle = setting
+            
+    def set_sound(self, fw_sound):
+        self.sound = fw_sound
   
     def draw(self):
         for p in self.particles:
